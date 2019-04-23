@@ -1,0 +1,46 @@
+== [orange]#Déploiement Déclaratif#
+
+=== Démarrage du POD
+
+[source, yaml]
+----
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: books-api
+spec:
+  template:
+    metadata:
+      labels:
+        run: books-api
+    spec:
+      containers:
+      - image: opus/books-api
+        name: books-api
+----
+
+[source, bash]
+----
+# kubectl create -f books-api-deployment.yaml
+deployment.extensions/books-api created
+----
+
+=== Création du Service
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: books-api
+  name: books-api
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: books-api
+  type: LoadBalancer
+----

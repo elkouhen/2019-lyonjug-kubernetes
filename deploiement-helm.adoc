@@ -1,0 +1,92 @@
+== [orange]#Déploiement "Helm"#
+
+=== Helm ?
+
+* Gestionnaire de Charts Kubernetes https://helm.sh/
+** Gestion de templates, variables, ...
+** Gestion de dépendances
+** https://github.com/helm/helm/blob/master/docs/related.md#helm-plugins[Plugins] (secrets, restore, ...)
+
+=== Création d'un Chart
+
+[source, bash]
+----
+# helm create books-api
+Creating books-api
+----
+
+=== Structure d'un Chart
+
+|===
+|Fichier |Description
+
+|Chart.yaml
+|Description du Chart (nom, numéros de version du Chart et de l'application)
+
+|values.yaml
+|Variables du Chart
+
+|templates
+|Répertoire contenant les templates des ressources K8s
+
+|===
+
+=== Release d'un Chart Helm
+
+[source, bash]
+----
+# helm package --version 0.1.0 books-api
+# helm repo index . --url https://softeamouest-opus.github.io/charts
+----
+
+Types de dépôts : 
+
+* Appli Web Statique (exemple : Dépôt Github)
+* https://github.com/sonatype-nexus-community/nexus-repository-helm[Plugin Nexus]
+* https://chartmuseum.com/[ChartMuseum]
+
+=== Déploiement d'un Chart Helm
+
+[source, bash]
+----
+# helm repo add softeamouest-opus-charts https://softeamouest-opus.github.io/charts
+# helm install --name books-api --values values.yaml softeamouest-opus-charts/books-api
+# helm list
+  NAME        	REVISION	UPDATED                 	STATUS  	CHART              	NAMESPACE
+  books-api   	1       	Thu Nov 29 22:29:43 2018	DEPLOYED	books-api-0.1.0    	default
+----
+
+=== Statut du Déploiement
+
+[source, bash]
+----
+# helm status books-api-dev
+LAST DEPLOYED: Tue Jan  8 21:37:41 2019
+NAMESPACE: dev
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Secret
+NAME                           TYPE    DATA  AGE
+books-api-dev-basicauthsecret  Opaque  1     10s
+
+==> v1/Service
+NAME              TYPE       CLUSTER-IP      EXTERNAL-IP  PORT(S)   AGE
+books-api-dev-h2  ClusterIP  10.108.255.85   <none>       1521/TCP  10s
+books-api-dev     ClusterIP  10.109.152.219  <none>       80/TCP    10s
+
+==> v1beta2/Deployment
+NAME              DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+books-api-dev-h2  1        1        1           1          10s
+books-api-dev     1        1        1           1          10s
+
+==> v1/Pod(related)
+NAME                               READY  STATUS   RESTARTS  AGE
+books-api-dev-h2-7846b98df4-pkpks  1/1    Running  0         10s
+books-api-dev-8699874d8f-gb7wz     1/1    Running  0         10s
+
+
+NOTES:
+1. Get the application URL by running these commands:
+  https://books-api-dev.k8.wildwidewest.xyz/
+----

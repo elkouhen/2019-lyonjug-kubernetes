@@ -1,0 +1,46 @@
+=== Helm - Définition de la dépendance
+
+[source, bash]
+----
+# pwd
+  /home/elkouhen/charts/books-api
+
+# cat requirements.yaml
+dependencies:
+- name: h2
+  version: 0.1.0
+  repository: "file://../h2"
+  condition: h2.enabled
+----
+
+=== Helm - Installation des dépendances
+
+[source, bash]
+----
+# pwd
+  /home/elkouhen/charts/books-api
+
+# helm dependency update --skip-refresh
+  Saving 1 charts
+  Deleting outdated charts
+----
+
+=== Helm - Configuration de l'URL JDBC
+
+[source, yaml]
+----
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+{{- if .Values.h2.enabled}}
+          env:
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:h2:tcp://{{ .Release.Name }}-h2:1521/~/books
+{{- end}}
+----

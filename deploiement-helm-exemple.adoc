@@ -1,0 +1,6 @@
+== [orange]#HELM : API de gestion de livres#
+
+* Ajout d'une dépendance du Chart 'books-api' vers le Chart 'h2'
+* Configuration de la base de données
+
+

@@ -1,0 +1,60 @@
+== [orange]#Déploiement Impératif#
+
+=== Démarrage du POD
+
+[source, bash]
+----
+# kubectl run books-api --image opus/books-api
+deployment "books-api" created
+
+# kubectl get pod,rs,deploy  -l run=books-api
+NAME                            READY     STATUS    RESTARTS   AGE
+po/books-api-5649ff5579-5k4q9   1/1       Running   0          35s
+
+NAME                      DESIRED   CURRENT   READY     AGE
+rs/books-api-5649ff5579   1         1         1         35s
+
+NAME               DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+deploy/books-api   1         1         1            1           35s
+----
+
+=== Appel du service books-api (via IP POD)
+
+[source, bash]
+----
+# kubectl get pod -o wide -l run=books-api
+NAME                         READY   STATUS    RESTARTS   AGE     IP          NODE                NOMINATED NODE
+books-api-5649ff5579-khzwn   1/1     Running   0          2m13s   10.46.0.1   vps267694.ovh.net   <none>
+
+# curl http://10.46.0.1:8080/books
+[{"id":1,"title":"Design Pattern"},{"id":2,"title":"Effective Java"},{"id":3,"title":"C++"}]
+----
+
+=== Création du Service
+
+[source, bash]
+----
+# kubectl expose deployment books-api --port=80 --target-port=8080 --type=LoadBalancer
+service/books-api exposed
+
+# kubectl get svc -l run=books-api
+NAME        TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+books-api   LoadBalancer   10.99.244.242   <pending>     80:30254/TCP   15s
+
+# curl http://10.99.244.242/books
+[{"id":1,"title":"Design Pattern"},{"id":2,"title":"Effective Java"},{"id":3,"title":"C++"}]
+----
+
+=== Appel du Service books-api (via IP SVC)
+
+[source, bash]
+----
+# curl http://10.99.244.242/books
+[{"id":1,"title":"Design Pattern"},{"id":2,"title":"Effective Java"},{"id":3,"title":"C++"}]
+
+# kubectl delete pod -l run=books-api
+pod "books-56d6bd4755-srzvd" deleted
+
+# curl http://10.99.244.242/books
+[{"id":1,"title":"Design Pattern"},{"id":2,"title":"Effective Java"},{"id":3,"title":"C++"}]
+----

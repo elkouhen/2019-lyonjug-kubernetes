@@ -1,0 +1,132 @@
+== [orange]#Déploiement Poste de Dev : Skaffold#
+
+[%step]
+* A chaque modif. des sources
+** Reconstruction  des images Docker 
+** Déploiement des images vers le registry Docker
+** Déploiement/Mise à jour de l'application sur Kubernetes 
+* [.blue]#Pas d'exigences de sécurité#
+
+=== Mise en Place de Skaffold (cas classique)
+
+[%step]
+* Créer un Dockerfile "autonome"
+** Le Dockerfile doit orchestrer les outils de build (npm, webpack, ...)
+* Créer la config Skaffold
+
+=== Configuration Skaffold (version classique)
+
+[source, yaml]
+----
+apiVersion: skaffold/v1beta1
+kind: Config
+build:
+  artifacts:
+  - image: localhost:5000/opus-books-gui
+deploy:
+  helm:
+    releases:
+    - name: books-gui
+      chartPath: ../charts/books-gui
+      setValues:
+        ingress.enabled: false
+        h2.enabled: false
+        image.repository: kube-registry:5000/opus-books-gui
+        service.type: NodePort
+      setValueTemplates:
+        image.tag: "{{.DIGEST}}"
+----
+
+=== Mise en Place de Skaffold (cas Maven)
+
+[%step]
+* Configurer le plugin Maven jib-maven-plugin
+** Le plugin génère un Dockerfile qui optimise la construction des images Docker pour les applications java
+** La création d'un Dockerfile n'est pas nécessaire !
+* Créer la config Skaffold
+** Configurer jibMaven dans la config. Skaffold
+
+=== Configuration Skaffold (version Maven)
+
+[source, yaml]
+----
+apiVersion: skaffold/v1beta1
+kind: Config
+build:
+  artifacts:
+  - image: localhost:5000/opus-books-api
+    jibMaven: {}
+deploy:
+  helm:
+    releases:
+    - name: books-api
+      chartPath: ../charts/books-api
+      setValues:
+        auth.htpassword: dXNlcjE6JGFwcjEkcHFTb3VWTE4kQ2EvQVNKSFhLU2dJSlpsd295andtMQ==
+        ingress.enabled: false
+        h2.enabled: false
+        image.repository: kube-registry:5000/opus-books-api
+        service.type: NodePort
+      setValueTemplates:
+        image.tag: "{{.DIGEST}}"
+----
+
+=== Configuration de JIB
+
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+   <groupId>com.google.cloud.tools</groupId>
+   <artifactId>jib-maven-plugin</artifactId>
+   <version>0.9.11</version>
+   <configuration>
+      <container>
+         <jvmFlags>
+            <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
+            <jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
+            <jvmFlag>-XX:+UseCGroupMemoryLimitForHeap</jvmFlag>
+         </jvmFlags>
+      </container>
+   </configuration>
+</plugin>
+----
+
+=== Démarrage de Skaffold
+
+[source, bash]
+----
+# skaffold dev -f skaffold-local.yaml
+----
+
+=== Démo
+
+=== Test du back end
+
+[source, bash]
+----
+[root@master1 ~]# kubectl get svc
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+books-api    NodePort    10.109.185.27   <none>        80:31185/TCP   2m
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        6m
+
+[root@master1 ~]# curl http://10.109.185.27/books
+[{"id":1,"title":"Design Pattern","author":"Erich Gamma, John Vlissides, Ralph E.. Johnson et Richard Helm"},\
+{"id":2,"title":"Effective Java","author":"Joshua Bloch"},\
+{"id":3,"title":"The C++ Programming Language","author":"Bjarne Stroustrup"},\
+{"id":4,"title":"The Clean Coder: A Code of Conduct for Professional Programmers","author":"Robert C. Martin"}]
+----
+
+=== Test du front end via port-forward
+
+[source, bash]
+----
+kubectl port-forward  $(kubectl get pod | grep books-gui | awk '{print $1;}') 9000:80
+----
+
+=== Test du front end via endpoint minikube
+
+[source, bash]
+----
+minikube service books-api --url
+----

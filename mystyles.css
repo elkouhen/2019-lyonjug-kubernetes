@@ -1,0 +1,43 @@
+.red {
+    color: indianred;
+}
+
+.blue {
+    color: #1a53a1;
+}
+
+.orange {
+    color: #FFCC33;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Karla');
+
+.reveal {
+    font-family: 'Karla', sans-serif;  
+}
+
+.footer {
+    position: absolute;
+    display: table;
+    width: 100%;
+    bottom: 0;
+
+    color: grey;
+}
+
+.footer span {
+    display: table-cell;
+    padding: 5px 15px 5px 5px;
+
+    text-align: center;
+    font-size: 70%;
+}
+
+.footer span:nth-of-type(1) {
+    text-align: left;
+}
+
+.footer span:nth-last-child(1) {
+    text-align: right;
+    padding-right: 100px;
+}

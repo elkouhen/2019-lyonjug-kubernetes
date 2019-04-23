@@ -1,0 +1,101 @@
+:description: Déploiement Kubernetes
+:email: mehdi.elkouhen@softeam.fr
+:revealjs_theme: white
+:revealjs_width: 1600
+:revealjs_height: 800
+:revealjs_history: True
+:revealjs_slideNumber: False
+
+//:icons: font
+//:source-highlighter: pygments
+:source-highlighter: highlightjs
+:highlightjs-theme: highlight.js/src/styles/idea.css
+:customcss: mystyles.css
+
+= [orange]#Déploiement d'Applications Kubernetes : Poste de Dev & Intégration Continue#
+
+++++
+ <div id="prez-footer" class="footer">
+     <span class="element">#Deploy-Java-Kubernetes</span>
+     <span class="element">@LyonJUG</span>
+     <span class="element">mehdi.elkouhen@gmail.com</span>
+ </div>
+
+ <script type="text/javascript">
+     window.addEventListener("load", function() {
+    
+         revealDiv = document.querySelector("body div.reveal")
+         footer = document.getElementById("prez-footer");
+         revealDiv.appendChild(footer);
+    
+     } );
+ </script> 
+++++
+
+== [orange]#Qui suis-je ?#
+
+* Mehdi EL KOUHEN
+* Dev Nantais @ SOFTEAM
+* Blog : https://softeamouest.github.io/
+* Email : mehdi.elkouhen@gmail.com
+
+== [orange]#Kubernetes#
+
+Gère le Déploiement, Maintenance et Scaling d'applications conteneurisées
+
+=== Concepts Kubernetes
+
+[%step]
+* Pod : Elémént unitaire de déploiement (1 ou +eurs conteneurs)
+* Replica Set : Gère le nombre de replicas d'un Pod
+* Deployment : Gère le déploiement, la mise à jour de Pods et Replica Set
+* Service : Point d'accès (non éphémère) à des pods
+
+== [orange]#Structure de l'application à déployer#
+
+* 1 Front End Web (books-gui)
+* 1 Application Java (books-api)
+* 1 Base de Données H2 (h2)
+
+Organisation GitHub : https://github.com/SofteamOuest-Opus
+
+== [orange]#Plan#
+
+[%step]
+* Déploiement Impératif
+* Déploiement Déclaratif
+* Packaging des confs de déploiement
+* Déploiement "Poste de Dev"
+* Déploiement "Intégration Continue"
+
+=== Choix d'Outils
+
+[%step]
+* Helm pour le packaging
+* "Poste de Dev"
+** Minikube comme serveur Kubernetes 
+** Skaffold pour le déploiement "Poste De Dev"
+* "Intégration Continue" (i.e. Jenkins)
+** Helmfile pour le déploiement
+
+include::deploiement-cli.adoc[]
+
+include::deploiement-manifest.adoc[]
+
+include::deploiement-helm.adoc[]
+
+include::deploiement-helm-exemple.adoc[]
+
+include::deploiement-helm-dependences.adoc[]
+
+//include::deploiement-helm-gestion-ssl.adoc[]
+
+include::deploiement-skaffold.adoc[]
+
+include::deploiement-jenkins.adoc[]
+
+include::deploiement-helm-gestion-secrets.adoc[]
+
+== [orange]#Merci !!!#
+
+Questions ?
