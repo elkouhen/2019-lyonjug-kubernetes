@@ -7,10 +7,6 @@
 ** Déploiement/Mise à jour de l'application sur Kubernetes 
 * [.red]#Fortes exigences de sécurité (gestion de mots de passe, ...)#
 
-=== Architecture Jenkins
-
-image::assets/kubernetes.png[K8s]
-
 === Mise en Place de Jenkins
 
 [%step]

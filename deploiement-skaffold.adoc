@@ -3,7 +3,6 @@
 [%step]
 * A chaque modif. des sources
 ** Reconstruction  des images Docker 
-** Déploiement des images vers le registry Docker
 ** Déploiement/Mise à jour de l'application sur Kubernetes 
 * [.blue]#Pas d'exigences de sécurité#
 
