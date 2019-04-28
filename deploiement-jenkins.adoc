@@ -7,6 +7,10 @@
 ** Déploiement/Mise à jour de l'application sur Kubernetes 
 * [.red]#Fortes exigences de sécurité (gestion de mots de passe, ...)#
 
+=== Architecture Jenkins
+
+image::assets/kubernetes.png[K8s]
+
 === Mise en Place de Jenkins
 
 [%step]
@@ -49,7 +53,7 @@ container('docker') {
         // Connexion au Registry Docker
         withDockerRegistry(credentialsId: 'nexus_user', url: "${registry_url}") {
 
-            sh "docker build . --build-arg SONAR_TOKEN=${sonarqube_tok} --tag ${URL}/repository/docker-repository/${IMAGE}:$TAG"
+            sh "docker build . --tag ${URL}/repository/docker-repository/${IMAGE}:$TAG"
             sh "docker push ${URL}/repository/docker-repository/${IMAGE}:$TAG"
         }
     }

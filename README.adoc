@@ -43,6 +43,15 @@
 
 Gère le Déploiement, Maintenance et Scaling d'applications conteneurisées
 
+== [orange]#Plan#
+
+[%step]
+* Déploiement Impératif
+* Déploiement Déclaratif
+* Packaging des confs de déploiement
+* Déploiement "Poste de Dev"
+* Déploiement "Intégration Continue"
+
 === Concepts Kubernetes
 
 [%step]
@@ -58,15 +67,6 @@ Gère le Déploiement, Maintenance et Scaling d'applications conteneurisées
 * 1 Base de Données H2 (h2)
 
 Organisation GitHub : https://github.com/SofteamOuest-Opus
-
-== [orange]#Plan#
-
-[%step]
-* Déploiement Impératif
-* Déploiement Déclaratif
-* Packaging des confs de déploiement
-* Déploiement "Poste de Dev"
-* Déploiement "Intégration Continue"
 
 === Choix d'Outils
 

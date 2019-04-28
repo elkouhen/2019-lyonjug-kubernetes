@@ -109,18 +109,18 @@ NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
 books-api    NodePort    10.109.185.27   <none>        80:31185/TCP   2m
 kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        6m
 
-[root@master1 ~]# curl http://10.109.185.27/books
+[root@master1 ~]# curl http://10.109.185.27/api/books
 [{"id":1,"title":"Design Pattern","author":"Erich Gamma, John Vlissides, Ralph E.. Johnson et Richard Helm"},\
 {"id":2,"title":"Effective Java","author":"Joshua Bloch"},\
 {"id":3,"title":"The C++ Programming Language","author":"Bjarne Stroustrup"},\
 {"id":4,"title":"The Clean Coder: A Code of Conduct for Professional Programmers","author":"Robert C. Martin"}]
 ----
 
-=== Test du front end via port-forward
+=== Test du back end via port-forward
 
 [source, bash]
 ----
-kubectl port-forward  $(kubectl get pod | grep books-gui | awk '{print $1;}') 9000:80
+kubectl port-forward  $(kubectl get pod | grep books-api | awk '{print $1;}') 8080:80
 ----
 
 === Test du front end via endpoint minikube
